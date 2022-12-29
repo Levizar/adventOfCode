@@ -1,0 +1,68 @@
+from tools import import_input_file
+
+lines = import_input_file()
+
+
+data = {
+    "/": {
+       "type": "directory",
+       "content": [],
+    }
+}
+
+path_stack = []
+def cd(path):
+    if path == "/":
+        path_stack.clear()
+        path_stack.append("/")
+    elif path == "..":
+        path_stack.pop()
+    else:
+        path_stack.append(path)
+    print(path_stack)
+
+def ls(line_iter):
+    line = next(line_iter)
+    current_path = "/".join(path_stack)
+    current_dir = data[current_path]
+    while line[0] != "$":
+        line = line.split()
+        name = line[1]
+        path = f"{current_path}/{name}" 
+        # print(current_dir)
+        # print(path)
+        # print(name)
+        current_dir["content"].append(path)
+        if line[0] == "dir":
+            data[path] = {
+                "type": "directory",
+                "content": [],
+            }
+        else:
+            data[path] = {
+                "type": "file",
+                "size": line[0],
+            }
+        try:
+            line = next(line_iter)
+        except StopIteration:
+            return
+
+    return line
+
+
+def main():
+    line_iter = iter(lines)
+    line = next(line_iter)
+    while line:
+        line = line.split()
+        if line[0] == "$":
+            if line[1] == "cd":
+                cd(line[2])
+                line = next(line_iter)
+            elif line[1] == "ls":
+                line = ls(line_iter)
+    print(data)
+
+main()
+
