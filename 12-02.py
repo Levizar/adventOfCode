@@ -16,28 +16,6 @@ size_mapping.update({"S": 1, "E": 26})
 X_SIZE = len(height_map)
 Y_SIZE = len(height_map[0])
 
-space = "    "
-
-def display_path_taken(current, a, came_from):
-    i, j = current
-    c = a[i][j]
-    a[i][j] = "\N{ESC}[31m" + height_map[i][j] + "\u001b[0m"
-    os.system("clear")
-    print("")
-    
-    acopy = copy.deepcopy(a)
-    path = reconstruct_path(came_from, current)
-    for i, j in path[:-1]:
-        acopy[i][j] = "\N{ESC}[94m" + height_map[i][j] + "\u001b[0m"
-    
-    to_print = []
-    for line in acopy:
-        to_print.append(space + "".join(line))
-    
-    print("\n".join(to_print))
-    time.sleep(0.05)
-    a[i][j] = "\N{ESC}[93m" + height_map[i][j] + "\u001b[0m"
-
 def is_usable(current, target):
     (i, j), (x, y) = current, target
     if not ((0 <= x < X_SIZE) and (0 <= y < Y_SIZE)):
@@ -66,16 +44,10 @@ def A_star(start, goal, h):
     f_score = defaultdict(lambda : float('inf'))
     f_score[start] = h(start)
 
-    # for display purpose
-    a = copy.deepcopy(height_map)
-
     while not open_queue.empty():
         current = open_queue.get()[1]
         
-        # display_path_taken(current, a, came_from)
-
         if current == goal:
-            display_path_taken(current, a, came_from)
             return reconstruct_path(came_from, current)
         
         i, j = current
@@ -99,16 +71,15 @@ def A_star(start, goal, h):
                 if neighbour not in oqueue :
                     open_queue.put((f_score[neighbour], neighbour))
 
-    raise Exception("No path possible")
-
+    return []
 
 def main():
-    start = 0
+    possible_start = []
     goal = 0
     for i, line in enumerate(height_map):
         for j, c in enumerate(line):
-            if c == "S":
-                start = (i, j)
+            if c in ("S", "a"):
+                possible_start.append((i, j))
             if c == "E":
                 goal = (i, j)
 
@@ -116,12 +87,9 @@ def main():
     def heuristic_function(node):
         # manhattan distance
         return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
-
-    t = time.process_time()
-    fastest_solution = A_star(start, goal, heuristic_function)
-    print(len(fastest_solution) - 1)
-    elapsed_time = time.process_time() - t
-    print(f"{elapsed_time=}")
+    
+    solutions = [A_star(start, goal, heuristic_function) for start in possible_start]
+    print(min([len(sol) - 1 for sol in solutions if sol]))
 
 
 main()
