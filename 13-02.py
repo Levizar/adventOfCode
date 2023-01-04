@@ -70,7 +70,7 @@ def merge_sort(to_sort):
 
     merged = []
     while l and r:
-        if is_order_correct(l[0], r[0]):
+        if is_order_correct(l, r):
             merged.append(l.pop(0))
         else:
             merged.append(r.pop(0))
