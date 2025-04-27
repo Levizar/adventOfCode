@@ -22,7 +22,7 @@ def main():
     ymax = max(positions, key=lambda p: p[1])[1]
 
     covered = set()
-    bob = 2000000
+    bob = 2_000_000
     # bob = 10
     # for y in range(ymin, ymax + 1):
     for y in range(bob, bob + 1):
@@ -113,7 +113,7 @@ def draw_stuff(space_positions):
         k: visual_map.get(v.get("type"), ".")
         for k, v in space_positions.items()
     }
-    
+
     print("")
     for y in range(ymin, ymax + 1):
         print(f"{y: >3} " + "".join([rep.get((x, y), ".") for x in range(xmin - 5, xmax + 5)]))

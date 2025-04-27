@@ -4,7 +4,7 @@ import os
 
 
 if __name__ == "__main__":
-    
+
     folder_name = sys.argv[1]
     path = f"./{folder_name}"
     # if not os.path.exists(path):
@@ -26,4 +26,3 @@ if __name__ == "__main__":
         ]
         with open(f"{path}-{file_name}.py", "w") as file:
             file.writelines("\n".join(lines))
-

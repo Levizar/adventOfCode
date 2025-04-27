@@ -7,7 +7,7 @@ import time
 
 
 def main():
-    rock_lines_raw = import_input_file()
+    rock_lines_raw = import_input_file(True)
     rock_coordinates = compute_rocks_coordinates(rock_lines_raw)
     
     cave_representation = {(x, y): "rock" for (x, y) in rock_coordinates}
@@ -61,9 +61,9 @@ def get_falling_position(sand, cave_representation):
         previous_position = sand
         sand = next_position(sand, cave_representation)
         
-        # cp = deepcopy(cave_representation)
-        # cp.update({sand: "sand"})
-        # draw_stuff(cp)
+        cp = deepcopy(cave_representation)
+        cp.update({sand: "sand"})
+        draw_stuff(cp)
 
     return sand
 
